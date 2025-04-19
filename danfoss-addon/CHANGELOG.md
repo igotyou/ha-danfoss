@@ -1,5 +1,8 @@
 # Changelog
+## [0.4.6]
 
+- Made all thermostats have unique devices.
+  
 ## [0.4.5]
 
 - Added new config option `m4FixEnabled` which could be enabled to fix Mac M4 startup bug.

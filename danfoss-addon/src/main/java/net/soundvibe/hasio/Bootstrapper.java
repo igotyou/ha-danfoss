@@ -189,7 +189,7 @@ public class Bootstrapper {
                         var thermostatID = STR."danfoss_icon_thermostat_room_\{room.number()}";
                         var entityTopic = STR."homeassistant/climate/\{thermostatID}/config";
                         var climateEntity = room.toMQTTClimateEntity(thermostatID, STATE_TOPIC_FMT, SET_TOPIC_FMT, iconMaster);
-                        logger.info(Json.toJsonBytes(climateEntity));
+                        logger.info("Room json is" + Json.toJsonString(climateEntity));
                         mqttClient.publish(entityTopic, Json.toJsonBytes(climateEntity), 0, false);
 
                         // now publish update to state topic

@@ -41,9 +41,9 @@ public record IconRoom(String name, int number, double temperature,
         var stateTopic = String.format(stateTopicFmt, number);
         var setTempTopic = String.format(setTopicFmt, number);
         return new MQTTClimateEntity(id, name, MODES, temperatureLow, temperatureHigh, 0.5,
-                Map.of("name", iconMaster.houseName(), "model", "Icon", "manufacturer", "Danfoss",
+                Map.of("name", iconMaster.houseName() + " " + name, "model", "Icon", "manufacturer", "Danfoss",
                         "hw_version", iconMaster.hardwareRevision(), "sw_version", iconMaster.softwareRevision(),
-                        "identifiers", id + " " + name),
+                        "identifiers", id),
                 stateTopic, "{{ value_json.attributes.availability }}",
                 stateTopic, "{{ value_json.state }}",
                 stateTopic, "{{ value_json.attributes.mode }}",

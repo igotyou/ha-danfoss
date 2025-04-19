@@ -1,9 +1,9 @@
-name: "Danfoss Icon"
-description: "Danfoss Icon Master Controller Addon"
-version: "0.4.5"
-slug: "danfoss"
+name: "Danfoss Icon (Custom)"
+description: "Forked Danfoss Icon Master Controller Addon with unique device identifiers"
+version: "0.4.6" 
+slug: "danfoss_custom"
 init: false
-url: "https://github.com/soundvibe/ha-danfoss"
+url: "https://github.com/igotyou/ha-danfoss" 
 homeassistant_api: true
 webui: "http://[HOST]:[PORT:9199]"
 watchdog: "http://[HOST]:[PORT:9199]/health"

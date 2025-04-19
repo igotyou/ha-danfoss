@@ -179,7 +179,7 @@ public class Bootstrapper {
                     // nop
                 }
             }));
-            logger.info("MQTT connection established successfully");
+            logger.info("MQTT connection established successfully with update 1.0");
             return scheduler.scheduleAtFixedRate(() -> {
                 var masterHandler = this.masterHandler.get();
                 try {

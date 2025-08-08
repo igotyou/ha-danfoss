@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.6]
+ 
+- Refactored thermostats, so they each have a unique device instead with battery and climate entites
+  
 ## [0.4.5]
 
 - Added new config option `m4FixEnabled` which could be enabled to fix Mac M4 startup bug.

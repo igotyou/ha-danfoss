@@ -1,30 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>net.soundvibe</groupId>
   <artifactId>ha-danfoss-addon</artifactId>
-  <version>0.0.1</version>
-  <packaging>jar</packaging>
   <name>ha-danfoss</name>
+  <version>0.0.1</version>
   <description>Home assistant danfoss addon</description>
   <url>https://github.com/igotyou/ha-danfoss</url>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <scm>
-    <connection>scm:git:https://github.com/igotyou/ha-danfoss.git</connection>
-    <developerConnection>scm:git:https://github.com/igotyou/ha-danfoss.git</developerConnection>
-    <url>https://github.com/igotyou/ha-danfoss.git</url>
-    <tag>HEAD</tag>
-  </scm>
   <developers>
     <developer>
       <id>igotyou</id>
@@ -32,72 +14,18 @@
       <email>alexgotyou@gmail.com</email>
     </developer>
   </developers>
-
-  <properties>
-    <java.version>21</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.4.14</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.github.sonic-amiga</groupId>
-      <artifactId>opensdg_java</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.javalin</groupId>
-      <artifactId>javalin</artifactId>
-      <version>5.6.3</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.squareup.okhttp3</groupId>
-      <artifactId>okhttp</artifactId>
-      <version>4.12.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.10.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.eclipse.paho</groupId>
-      <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-      <version>1.2.5</version>
-    </dependency>
-
-    <!--testing-->
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.10.0</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
-
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:https://github.com/igotyou/ha-danfoss.git</connection>
+    <developerConnection>scm:git:https://github.com/igotyou/ha-danfoss.git</developerConnection>
+    <url>https://github.com/igotyou/ha-danfoss.git</url>
+  </scm>
   <build>
     <plugins>
       <plugin>
@@ -116,9 +44,7 @@
           <argLine>--add-opens=java.base/java.nio=ALL-UNNAMED --enable-preview</argLine>
         </configuration>
       </plugin>
-
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
@@ -127,7 +53,6 @@
           <compilerArgs>--enable-preview</compilerArgs>
         </configuration>
       </plugin>
-
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <version>3.3.0</version>
@@ -141,7 +66,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -161,9 +85,7 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.5.0</version>
         <executions>
@@ -174,8 +96,7 @@
             </goals>
             <configuration>
               <transformers>
-                <transformer
-                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <transformer>
                   <mainClass>net.soundvibe.hasio.Application</mainClass>
                 </transformer>
               </transformers>
@@ -184,26 +105,59 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>3.1.0</version>
         <executions>
           <execution>
             <id>copy-jar</id>
             <phase>package</phase>
-            <configuration>
-              <target>
-                <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                      tofile="${project.basedir}/${project.build.finalName}.jar" />
-              </target>
-            </configuration>
             <goals>
               <goal>run</goal>
             </goals>
+            <configuration>
+              <target>
+                <copy />
+              </target>
+            </configuration>
           </execution>
         </executions>
       </plugin>
-
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-jupiter-api</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-params</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <properties>
+    <java.version>21</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 </project>

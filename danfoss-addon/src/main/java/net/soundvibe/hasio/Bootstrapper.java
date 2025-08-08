@@ -26,8 +26,8 @@ public class Bootstrapper {
 
     private static final Logger logger = LoggerFactory.getLogger(Bootstrapper.class);
 
-    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(16, Thread.ofVirtual().factory());
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(8, Thread.ofVirtual().factory());
+    private static final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(16);
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(8);
     private final Options options;
 
     private final Map<String, IMqttToken> subscribers = new ConcurrentHashMap<>(ICON_MAX_ROOMS * 2);
@@ -89,14 +89,11 @@ public class Bootstrapper {
                 var command = Json.fromString(ctx.body(), Command.class);
                 executeCommand(command);
                 ctx.status(200)
-                        .result("""
-            { "status": "OK" }""")
+                        .result("{ \"status\": \"OK\" }")
                         .contentType("application/json");
             } catch (Throwable e) {
                 ctx.status(500)
-                        .result(STR."""
-                        "status": "error", "error": "\{ e.getMessage() }"
-                        """)
+                        .result(String.format("{ \"status\": \"error\", \"error\": \"%s\" }", e.getMessage()))
                         .contentType("application/json");
             }
         });
@@ -163,7 +160,7 @@ public class Bootstrapper {
     private ScheduledFuture<?> scheduleMQTTUpdates(Options options) {
         String clientID = UUID.randomUUID().toString();
         try {
-            var mqttClient = new MqttClient(STR."tcp://\{options.mqttHost()}:\{options.mqttPort()}", clientID);
+            var mqttClient = new MqttClient(String.format("tcp://%s:%d", options.mqttHost(), options.mqttPort()), clientID);
             var mqttConnOptions = new MqttConnectOptions();
             mqttConnOptions.setAutomaticReconnect(true);
             mqttConnOptions.setCleanSession(true);
@@ -172,7 +169,7 @@ public class Bootstrapper {
             mqttConnOptions.setUserName(options.mqttUsername());
             mqttConnOptions.setPassword(options.mqttPassword().toCharArray());
             mqttClient.connect(mqttConnOptions);
-            Runtime.getRuntime().addShutdownHook(Thread.ofVirtual().unstarted(() -> {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
                     mqttClient.close(true);
                 } catch (MqttException e) {
@@ -186,15 +183,20 @@ public class Bootstrapper {
                     var iconMaster = masterHandler.iconMaster();
                     for (var room : masterHandler.listRooms()) {
                         // first publish climate device
-                        var thermostatID = STR."danfoss_icon_thermostat_room_\{room.number()}";
-                        var entityTopic = STR."homeassistant/climate/\{thermostatID}/config";
+                        var thermostatID = String.format("danfoss_icon_thermostat_room_%d", room.number());
+                        var entityTopic = String.format("homeassistant/climate/%s/config", thermostatID);
                         var climateEntity = room.toMQTTClimateEntity(thermostatID, STATE_TOPIC_FMT, SET_TOPIC_FMT, iconMaster);
                         mqttClient.publish(entityTopic, Json.toJsonBytes(climateEntity), 0, false);
 
                         // 2. Publish battery sensor
                         var batterySensorEntity = room.toMQTTBatterySensorEntity(thermostatID, STATE_TOPIC_FMT, iconMaster);
-                        var batteryTopic = STR."homeassistant/sensor/\{thermostatID}_battery/config";
+                        var batteryTopic = String.format("homeassistant/sensor/%s_battery/config", thermostatID);
                         mqttClient.publish(batteryTopic, Json.toJsonBytes(batterySensorEntity), 0, false);
+
+                        // 3. Publish temperature sensor
+                        var temperatureSensorEntity = room.toMQTTTemperatureSensorEntity(thermostatID, STATE_TOPIC_FMT, iconMaster);
+                        var temperatureTopic = String.format("homeassistant/sensor/%s_temperature/config", thermostatID);
+                        mqttClient.publish(temperatureTopic, Json.toJsonBytes(temperatureSensorEntity), 0, false);
 
                         // now publish update to state topic
                         var stateTopic = String.format(STATE_TOPIC_FMT, room.number());
@@ -228,7 +230,7 @@ public class Bootstrapper {
                 return listener;
             }
 
-            IMqttMessageListener newListener = (_, message) -> {
+            IMqttMessageListener newListener = (topic, message) -> {
                 try {
                     var setState = Json.fromString(message.toString(), MQTTSetState.class);
                     // get room preset

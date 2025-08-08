@@ -146,7 +146,7 @@ public class IconMasterHandler implements PacketHandler {
                     break;
                 case RAIL_INPUTHEATORCOOL:
                     var coolingEnabled = pkt.getBoolean();
-                    this.roomsByName.forEach((_, iconRoomHandler) -> iconRoomHandler.setHeatingState(coolingEnabled));
+                    this.roomsByName.forEach((name, iconRoomHandler) -> iconRoomHandler.setHeatingState(coolingEnabled));
                     break;
             }
         }

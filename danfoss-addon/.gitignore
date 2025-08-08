@@ -17,3 +17,5 @@ out/
 /doc
 /target
 target/
+dependency-reduced-pom.xml
+*.jar

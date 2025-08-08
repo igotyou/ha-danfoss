@@ -50,8 +50,7 @@ public record IconRoom(String name, int number, double temperature,
                 stateTopic, "{{ value_json.attributes.mode }}",
                 PRESET_MODES, setTempTopic,
                 stateTopic, "{{ value_json.attributes.preset }}",
-                setTempTopic, STR."""
-                { 'temperature_target': {{ value }}, 'room_number': \{number} }""", // set target temperature
+                setTempTopic, String.format("{ 'temperature_target': {{ value }}, 'room_number': %d }", number), // set target temperature
                 stateTopic, "{{ value_json.attributes.temperature_target }}", //target temperature state
                 stateTopic, "{{ value_json.attributes.temperature_home }}",
                 stateTopic, "{{ value_json.attributes.temperature_away }}"
@@ -69,6 +68,30 @@ public record IconRoom(String name, int number, double temperature,
             "{{ value_json.attributes.battery_level }}", // value template
             "%", // unit
             "battery", // device class
+            "measurement", // state class
+            Map.of(
+                "name", name + " Danfoss Icon",
+                "model", "Icon",
+                "manufacturer", "Danfoss",
+                "hw_version", iconMaster.hardwareRevision(),
+                "sw_version", iconMaster.softwareRevision(),
+                "identifiers", id,
+                "serial_number", iconMaster.serialNumber()
+            )
+        );
+    }
+
+    public MQTTSensorEntity toMQTTTemperatureSensorEntity(String id, String stateTopicFmt, IconMaster iconMaster) {
+        var stateTopic = String.format(stateTopicFmt, number);
+
+        return new MQTTSensorEntity(
+            id + "_temperature", // unique ID
+            "Temperature", // friendly name
+            "sensor", // component type
+            String.format(stateTopic, number), // state topic
+            "{{ value_json.state }}", // value template
+            "°C", // unit
+            "temperature", // device class
             "measurement", // state class
             Map.of(
                 "name", name + " Danfoss Icon",

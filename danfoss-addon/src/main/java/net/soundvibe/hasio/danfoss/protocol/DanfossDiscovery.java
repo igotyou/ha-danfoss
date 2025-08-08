@@ -36,7 +36,7 @@ public class DanfossDiscovery implements AutoCloseable {
     public DanfossDiscovery(String oneTimeCode, DanfossBindingConfig bindingConfig) {
         this.oneTimeCode = sanitizeOneTimeCode(Objects.requireNonNull(oneTimeCode));
         this.bindingConfig = bindingConfig;
-        this.executorService = Executors.newScheduledThreadPool(16, Thread.ofVirtual().factory());
+        this.executorService = Executors.newScheduledThreadPool(16);
         this.conn = new GridConnection(bindingConfig.privateKey(), this.executorService);
     }
 
@@ -139,7 +139,7 @@ public class DanfossDiscovery implements AutoCloseable {
             return;
         }
         this.closed = true;
-        this.executorService.close();
+        this.executorService.shutdown();
         this.conn.close();
     }
 

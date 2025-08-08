@@ -18,4 +18,3 @@ out/
 /target
 target/
 dependency-reduced-pom.xml
-*.jar
